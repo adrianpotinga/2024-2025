@@ -1,0 +1,28 @@
+a) Elenco delle attività disponibili in una città il mercoledì
+
+SELECT P.nome AS Palestra, A.nome AS Attivita, O.ora_inizio, O.ora_fine, A.posti_max, A.prezzo
+FROM Attivita A
+JOIN Palestra P ON A.palestra_id = P.id
+JOIN Orario O ON A.id = O.attivita_id
+WHERE P.citta = 'Roma' AND O.giorno = 'Mercoledì'
+ORDER BY P.nome;
+b) Totale importo prenotazioni pagate nel mese di aprile per una palestra
+
+SELECT P.nome AS Palestra, SUM(PA.importo) AS TotaleIncasso
+FROM Pagamento PA
+JOIN Prenotazione PR ON PA.prenotazione_id = PR.id
+JOIN Attivita A ON PR.attivita_id = A.id
+JOIN Palestra P ON A.palestra_id = P.id
+WHERE MONTH(PA.data_pagamento) = 4
+AND P.id = 1  -- ID della palestra richiesta
+GROUP BY P.nome;
+
+c) Classifica annuale delle palestre di una città ordinata per numero di prenotazioni
+
+SELECT P.nome AS Palestra, COUNT(PR.id) AS TotalePrenotazioni
+FROM Prenotazione PR
+JOIN Attivita A ON PR.attivita_id = A.id
+JOIN Palestra P ON A.palestra_id = P.id
+WHERE YEAR(PR.data) = 2023 AND P.citta = 'Roma'
+GROUP BY P.nome
+ORDER BY TotalePrenotazioni DESC;
